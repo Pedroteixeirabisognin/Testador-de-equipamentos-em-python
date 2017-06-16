@@ -3,263 +3,186 @@ import socket
 from subprocess import check_output
 import sys
 
+
+
+def Verifica10(b):
+            a=list(b)
+            op= int(input("Informe o que você deseja verificar:\n1-AP\n2-RF\n3-Terminal\n4-Todos\n"))
+            PingaTerm10(a,op)   
+        
+def Verifica52(b):
+            a=list(b)
+            op= int(input("Informe o que você deseja verificar:\n1-AP\n2-RF\n3-Terminal\n4-Todos\n"))
+            PingaTerm52(a,op)
+
+####Função para pingar terminais ip 52####
+def PingaTerm52(a,op):
+            i=0
+            msgA=0
+            msgR=0
+            msgT=0
+            if op == 1 or op == 4:
+                i=0
+                print('Ap:\n***************\n')
+                while True and msgA != 3:
+                    try:
+                        b=a
+                        b[-1]=str(86-i)
+                        b = ''.join(str(y) for y in b)
+                        b=str(b)
+                        c = check_output('ping -w 1000 -n 2 ' + b, shell=True)            
+                        c = str(c)
+                        d = c.count('TTL')
+                        print(b + ' funcionou\n')
+                        msgA=0
+                    except :
+                        print(b + ' Não funcionou\n')
+                        msgA=msgA+1
+                    i=i+1
+
+            if op == 2 or op == 4:
+                i=0
+                print('Rádio Frequência:\n***************\n')
+                while True and msgR != 3:
+                    try:
+                        b=a
+                        b[-1]=str(87+i)
+                        b = ''.join(str(y) for y in b)
+                        b=str(b)
+                        c = check_output('ping -w 1000 -n 2 ' + b, shell=True)            
+                        c = str(c)
+                        d = c.count('TTL')
+                        print(b + ' funcionou\n')
+                        msgR=0
+                    except :
+                        print(b + ' Não funcionou\n')
+                        msgR=msgR+1
+                    i=i+1
+            if op == 3 or op == 4:
+                i=0
+                print('Terminal de Consulta:\n***************\n')
+                while True and msgT != 3:
+                    try:
+                        b=a
+                        b[-1]=str(234+i)
+                        b = ''.join(str(y) for y in b)
+                        b=str(b)
+                        c = check_output('ping -w 1000 -n 2 ' + b, shell=True)            
+                        c = str(c)
+                        d = c.count('TTL')
+                        print(b + ' funcionou\n')
+                        msgT=0
+                    except :
+                        print(b + ' Não funcionou\n')
+                        msgT=msgT+1
+                    i=i+1
+####Função para pingar terminal ip 10
+def PingaTerm10(a,op):
+            i=0
+            msgA=0
+            msgR=0
+            msgT=0
+            
+            if op == 1 or op == 4:
+                i=0
+                print('Ap:\n***************\n')
+                while True and msgA != 3:
+                    try:
+                        b=a
+                        b[-1]=str(161+i)
+                        b = ''.join(str(y) for y in b)
+                        b=str(b)
+                        c = check_output('ping -w 1000 -n 2 ' + b, shell=True)            
+                        c = str(c)
+                        d = c.count('TTL')
+                        print(b + ' funcionou\n')
+                        msgA=0
+                    except :
+                        print(b + ' Não funcionou\n')
+                        msgA=msgA+1
+                    i=i+1
+
+            if op == 2 or op == 4:
+                i=0
+                print('Rádio Frequência:\n***************\n')
+                while True and msgR != 3:
+                    try:
+                        b=a
+                        b[-1]=str(166+i)
+                        b = ''.join(str(y) for y in b)
+                        b=str(b)
+                        c = check_output('ping -w 1000 -n 2 ' + b, shell=True)            
+                        c = str(c)
+                        d = c.count('TTL')
+                        print(b + ' funcionou\n')
+                        msgR=0
+                    except :
+                        print(b + ' Não funcionou\n')
+                        msgR=msgR+1
+                    i=i+1
+            if op == 3 or op == 4:
+                i=0                
+                print('Terminal de Consulta:\n***************\n')
+                while True and msgT != 3:
+                    try:
+                        b=a
+                        b[-1]=str(176+i)
+                        b = ''.join(str(y) for y in b)
+                        b=str(b)
+                        c = check_output('ping -w 1000 -n 2 ' + b, shell=True)            
+                        c = str(c)
+                        d = c.count('TTL')
+                        print(b + ' funcionou\n')
+                        msgT=0
+                    except :
+                        print(b + ' Não funcionou\n')
+                        msgT=msgT+1
+                    i=i+1
+
+#### Faz o programa ficar em looping funcionando constantemente####
+
 while True:
 
+    #### Recebe o número da loja a ser verificado#### 
+
     num = input('Informe o número da loja!!')
+
+    #### TRATA ERROS E EXCEÇÕES
+
     try:
 
+       #### CHAMA O PROMPT ENTREGANDO OS VALORES PARA "a" EM UM OBJECT #### 
+       
        a=check_output('ping ' + socket.gethostbyname('loja'+ num), shell=True)
+
+       #### CONVERTO PARA STRING PRA VERIFICAÇÃO FUTURA EM UM COUNT ####
+
        b = str(a)
 
+       #### PRINTA O IP DA REDE ####
+        
        print (socket.gethostbyname('loja'+num))
+
+       #### ARMAZENA O IP NA VARIÁVEL 'b' ####
+
        b=(socket.gethostbyname('loja'+num))
-    except: 
+
+       #### SE A REDE ESTIVER FORA DO AR ELE CAI NO EXCEPTION INFORMANDO O ESTADO DA REDE ####
+    except:
+        
         print('Servidor fora do ar!!')
-        sys.exit(0)
+        b='0'
+
+    #### VERIFICA SE A REDE É 10 ou 52 ####
+
     if b.count('10.') == True:
-
-        print('Ap:\n***************\n')
-        try:
-        
-            a = check_output('ping ' + b + '61', shell=True)
-            c = str(a)
-            d = c.count('TTL')
-
-            print(b + '61' + ' Funcionou!!')
-        except :
-            print(b + '61' + ' Não Funcionou!!')
-
-        try:
-        
-            a = check_output('ping ' + b + '62', shell=True)
-            c = str(a)
-            d = c.count('TTL')
-
-            print(b + '62' + ' Funcionou!!')
-        except :
-            print(b + '62' + ' Não Funcionou!!')
-
-        print('Rádio Frequência:\n***************\n')
-        try:
-        
-            a = check_output('ping ' + b + '66', shell=True)
-            c = str(a)
-            d = c.count('TTL')
-
-            print(b + '66' + ' Funcionou!!')
-        except :
-            print(b + '66' + ' Não Funcionou!!')
-
-        try:
-        
-            a = check_output('ping ' + b + '67', shell=True)
-            c = str(a)
-            d = c.count('TTL')
-
-            print(b + '67' + ' Funcionou!!')
-        except :
-            print(b + '67' + ' Não Funcionou!!')
-
-        print('Terminais de consulta:\n***************\n')
-        try:
-        
-            a = check_output('ping ' + b + '76', shell=True)
-            c = str(a)
-            d = c.count('TTL')
-
-            print(b + '76' + ' Funcionou!!')
-        except :
-            print(b + '76' + ' Não Funcionou!!')
-
-        try:
-            a = check_output('ping ' + b + '77', shell=True)
-            c = str(a)
-            d = c.count('TTL')
-            print(b + '77' + ' Funcionou!!')
-        except :
-            print(b + '77' + ' Não Funcionou!!')
-
-        try:
-        
-            a = check_output('ping ' + b + '78', shell=True)
-            c = str(a)
-            d = c.count('TTL')
-
-            print(b + '78' + ' Funcionou!!')
-        except :
-            print(b + '78' + ' Não Funcionou!!')
-
-        try:
-            a = check_output('ping ' + b + '79', shell=True)
-            c = str(a)
-            d = c.count('TTL')
-            print(b + '79' + ' Funcionou!!')
-        except :
-            print(b + '79' + ' Não Funcionou!!')
-
-        try:
-        
-            a = check_output('ping ' + b + '80', shell=True)
-            c = str(a)
-            d = c.count('TTL')
-
-            print(b + '80' + ' Funcionou!!')
-        except :
-            print(b + '80' + ' Não Funcionou!!')
-
-        try:
-            a = check_output('ping ' + b + '81', shell=True)
-            c = str(a)
-            d = c.count('TTL')
-            print(b + '81' + ' Funcionou!!')
-        except :
-            print(b + '81' + ' Não Funcionou!!')
-        
+        Verifica10(b)
+    elif b.count('52.') == True:
+        Verifica52(b)
     else:
-            a=list(b)
-
-            print('Ap:\n***************\n')
-            try:
-                b=a
-                b[-1]='85'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')
-            try:
-                b=a
-                b[-1]='86'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')  
+        print("Voltando...")
 
 
-            print('Rádio Frequência:\n***************\n')
-            try:
-                b=a
-                b[-1]='87'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')       
-            try:
-                b=a
-                b[-1]='88'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')       
         
-            print('Terminais de consulta:\n***************\n')
-            try:
-                b=a
-                b[-1]='234'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')       
+#############################################
 
-            try:
-                b=a
-                b[-1]='235'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')       
-
-            try:
-                b=a
-                b[-1]='236'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')       
-
-            try:
-                b=a
-                b[-1]='237'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')       
-            try:
-                b=a
-                b[-1]='238'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')       
-            try:
-                b=a
-                b[-1]='239'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')       
-            try:
-                b=a
-                b[-1]='240'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')       
-            try:
-                b=a
-                b[-1]='241'
-                b = ''.join(str(y) for y in b)
-                b=str(b)
-                c = check_output('ping ' + b, shell=True)            
-                c = str(c)
-                d = c.count('TTL')
-                
-                print(b + ' funcionou\n')
-            except :
-                print(b + ' Não funcionou\n')       
